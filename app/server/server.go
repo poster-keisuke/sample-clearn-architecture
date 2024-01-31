@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/gorilla/mux"
-	"github.com/poster-keisuke/sample-clearn-architecture/app/controller/products"
+	"github.com/poster-keisuke/sample-clearn-architecture/app/controller"
 	"github.com/poster-keisuke/sample-clearn-architecture/app/infra/sqlite3/repository"
 	"github.com/poster-keisuke/sample-clearn-architecture/app/usacase/product"
 	"log"
@@ -45,9 +45,10 @@ func Run(ctx context.Context) {
 
 func productRouter(r *mux.Router) {
 	productRepository := repository.NewProductRepository()
-	h := products.NewHandler(
+	transaction := repository.NewTransaction()
+	h := controller.NewHandler(
 		product.NewCreateProductUseCase(productRepository),
-		product.NewUpdateProductUseCase(productRepository),
+		product.NewUpdateProductUseCase(productRepository, transaction),
 		product.NewGetProductUseCase(productRepository),
 	)
 

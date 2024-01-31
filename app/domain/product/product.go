@@ -21,3 +21,15 @@ func NewProduct(name, description, category string, price, stock int) *Product {
 		Stock:       stock,
 	}
 }
+
+type WithOrderedAmount struct {
+	*Product
+	Amount int `json:"amount"`
+}
+
+func NewProductWithOrderedAmount(product *Product, amount int) *WithOrderedAmount {
+	return &WithOrderedAmount{
+		Product: product,
+		Amount:  amount,
+	}
+}

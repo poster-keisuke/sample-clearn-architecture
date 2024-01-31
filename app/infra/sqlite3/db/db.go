@@ -1,6 +1,7 @@
 package db
 
 import (
+	"context"
 	"database/sql"
 	"log"
 
@@ -9,6 +10,10 @@ import (
 
 type DB struct {
 	db *sql.DB
+}
+
+type Conn interface {
+	PrepareContext(ctx context.Context, query string) (*sql.Stmt, error)
 }
 
 var DBConnection *sql.DB
