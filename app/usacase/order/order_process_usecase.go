@@ -9,13 +9,25 @@ import (
 	"golang.org/x/xerrors"
 )
 
-type OrderProcessUseCase struct {
+type ProcessOrderUseCase struct {
 	orderRepo   orderDomain.OrderRepository
 	productRepo productDomain.ProductRepository
 	transaction transaction.Transaction
 }
 
-func (uc *OrderProcessUseCase) Run(ctx context.Context, orderID string, orderProcessType orderDomain.OrderProcessType) (*orderDomain.Order, error) {
+func NewProcessOrderUseCase(
+	orderRepo orderDomain.OrderRepository,
+	productRepo productDomain.ProductRepository,
+	transaction transaction.Transaction,
+) *ProcessOrderUseCase {
+	return &ProcessOrderUseCase{
+		orderRepo:   orderRepo,
+		productRepo: productRepo,
+		transaction: transaction,
+	}
+}
+
+func (uc *ProcessOrderUseCase) Run(ctx context.Context, orderID string, orderProcessType orderDomain.OrderProcessType) (*orderDomain.Order, error) {
 	var order *orderDomain.Order
 	if err := orderProcessType.Valid(); err != nil {
 		return nil, xerrors.Errorf(": %w", err)

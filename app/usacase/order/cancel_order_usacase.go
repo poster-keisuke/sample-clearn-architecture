@@ -15,6 +15,18 @@ type CancelOrderUseCase struct {
 	transaction transaction.Transaction
 }
 
+func NewCancelOrderUseCase(
+	orderRepo orderDomain.OrderRepository,
+	productRepo productDomain.ProductRepository,
+	transaction transaction.Transaction,
+) *CancelOrderUseCase {
+	return &CancelOrderUseCase{
+		orderRepo:   orderRepo,
+		productRepo: productRepo,
+		transaction: transaction,
+	}
+}
+
 func (uc *CancelOrderUseCase) Run(ctx context.Context, orderID string) error {
 	order, err := uc.orderRepo.GetByIDAndStatus(ctx, orderID, orderDomain.OrderStatusWaiting)
 	if err != nil {

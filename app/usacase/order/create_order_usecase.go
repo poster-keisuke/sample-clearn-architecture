@@ -6,7 +6,7 @@ import (
 	productDomain "github.com/poster-keisuke/sample-clearn-architecture/app/domain/product"
 )
 
-type CreteOrderUseCase struct {
+type CreateOrderUseCase struct {
 	orderRepo   orderDomain.OrderRepository
 	productRepo productDomain.ProductRepository
 }
@@ -14,8 +14,8 @@ type CreteOrderUseCase struct {
 func NewCreteOrderUseCase(
 	orderRepo orderDomain.OrderRepository,
 	productRepo productDomain.ProductRepository,
-) *CreteOrderUseCase {
-	return &CreteOrderUseCase{
+) *CreateOrderUseCase {
+	return &CreateOrderUseCase{
 		orderRepo:   orderRepo,
 		productRepo: productRepo,
 	}
@@ -30,7 +30,7 @@ type CreteOrderUseCaseInputDto struct {
 	Products []*ProductIDAndAmount `json:"products"`
 }
 
-func (uc *CreteOrderUseCase) Run(ctx context.Context, input CreteOrderUseCaseInputDto) error {
+func (uc *CreateOrderUseCase) Run(ctx context.Context, input CreteOrderUseCaseInputDto) error {
 	//newOrder := orderDomain.NewOrder()
 	//
 	//ids := make([]string, 0, len(input.Products))

@@ -60,17 +60,17 @@ func productRouter(r *mux.Router) {
 
 func orderRouter(r *mux.Router) {
 	orderRepository := repository.NewOrderRepository()
-	prodcutRepository := repository.NewProductRepository()
+	productRepository := repository.NewProductRepository()
+	transaction := repository.NewTransaction()
 
 	//transaction := repository.NewTransaction()
 	h := controller.NewOrderHandler(
-		order.NewCreteOrderUseCase(orderRepository, prodcutRepository),
-		//order.NewCreteOrderUseCase()
-		//product.NewUpdateProductUseCase(productRepository, transaction),
-		//product.NewGetProductUseCase(productRepository),
+		order.NewCreteOrderUseCase(orderRepository, productRepository),
+		order.NewCancelOrderUseCase(orderRepository, productRepository, transaction),
+		order.NewProcessOrderUseCase(orderRepository, productRepository, transaction),
 	)
 
 	r.HandleFunc("/api/orders", h.CreateOrder).Methods(http.MethodPost)
-	//r.HandleFunc("/api/orders/{id}", h.UpdateProduct).Methods(http.MethodPut)
-	//r.HandleFunc("/api/orders/{id}/process", h.GetProduct).Methods(http.MethodGet)
+	r.HandleFunc("/api/orders/{id}", h.CancelOrder).Methods(http.MethodPut)
+	r.HandleFunc("/api/orders/{id}/process", h.ProcessOrder).Methods(http.MethodPost)
 }
