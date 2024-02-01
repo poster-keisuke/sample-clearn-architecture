@@ -11,6 +11,24 @@ type Product struct {
 	Stock       int    `json:"stock"`
 }
 
+func Reconstruct(
+	id,
+	name,
+	description,
+	category string,
+	price int,
+	stock int,
+) *Product {
+	return &Product{
+		ID:          id,
+		Name:        name,
+		Description: description,
+		Price:       price,
+		Category:    category,
+		Stock:       stock,
+	}
+}
+
 func NewProduct(name, description, category string, price, stock int) *Product {
 	return &Product{
 		ID:          uuid.NewString(),
@@ -22,13 +40,13 @@ func NewProduct(name, description, category string, price, stock int) *Product {
 	}
 }
 
-type WithOrderedAmount struct {
+type OrderedProduct struct {
 	*Product
 	Amount int `json:"amount"`
 }
 
-func NewProductWithOrderedAmount(product *Product, amount int) *WithOrderedAmount {
-	return &WithOrderedAmount{
+func NewOrderedProduct(product *Product, amount int) *OrderedProduct {
+	return &OrderedProduct{
 		Product: product,
 		Amount:  amount,
 	}

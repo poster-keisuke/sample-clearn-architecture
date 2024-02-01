@@ -24,11 +24,20 @@ func (uc *CancelOrderUseCase) Run(ctx context.Context, orderID string) error {
 	if err := uc.transaction.StartTransaction(func(tx *sql.Tx) error {
 
 		order.UpdateStatus(orderDomain.OrderStatusCanceled)
-		if err := uc.orderRepo.UpdateTx(ctx, tx, order); err != nil {
+		if err := uc.orderRepo.Update(ctx, order); err != nil {
 			return xerrors.Errorf(": %w", err)
 		}
 
-		// TODO: revert product stock
+		products, err := getRevertProductStock(ctx, order)
+		if err != nil {
+			xerrors.Errorf(": %w", err)
+		}
+
+		for _, product := range products {
+			if err := uc.productRepo.Update(ctx, product); err != nil {
+				return xerrors.Errorf(": %w", err)
+			}
+		}
 
 		return nil
 	}); err != nil {

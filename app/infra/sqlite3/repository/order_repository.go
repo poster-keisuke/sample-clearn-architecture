@@ -83,7 +83,7 @@ WHERE o.id = ? AND o.status = ?;`)
 			return nil, xerrors.Errorf(": %w", err)
 		}
 
-		o.Products = append(o.Products, product.NewProductWithOrderedAmount(&p, amount))
+		o.Products = append(o.Products, product.NewOrderedProduct(&p, amount))
 	}
 
 	return &o, nil

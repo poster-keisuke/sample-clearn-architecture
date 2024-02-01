@@ -6,6 +6,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/poster-keisuke/sample-clearn-architecture/app/controller"
 	"github.com/poster-keisuke/sample-clearn-architecture/app/infra/sqlite3/repository"
+	"github.com/poster-keisuke/sample-clearn-architecture/app/usacase/order"
 	"github.com/poster-keisuke/sample-clearn-architecture/app/usacase/product"
 	"log"
 	"net/http"
@@ -46,7 +47,7 @@ func Run(ctx context.Context) {
 func productRouter(r *mux.Router) {
 	productRepository := repository.NewProductRepository()
 	transaction := repository.NewTransaction()
-	h := controller.NewHandler(
+	h := controller.NewProductHandler(
 		product.NewCreateProductUseCase(productRepository),
 		product.NewUpdateProductUseCase(productRepository, transaction),
 		product.NewGetProductUseCase(productRepository),
@@ -55,4 +56,21 @@ func productRouter(r *mux.Router) {
 	r.HandleFunc("/api/products", h.CreateProduct).Methods(http.MethodPost)
 	r.HandleFunc("/api/products/{id}", h.UpdateProduct).Methods(http.MethodPut)
 	r.HandleFunc("/api/products/{id}", h.GetProduct).Methods(http.MethodGet)
+}
+
+func orderRouter(r *mux.Router) {
+	orderRepository := repository.NewOrderRepository()
+	prodcutRepository := repository.NewProductRepository()
+
+	//transaction := repository.NewTransaction()
+	h := controller.NewOrderHandler(
+		order.NewCreteOrderUseCase(orderRepository, prodcutRepository),
+		//order.NewCreteOrderUseCase()
+		//product.NewUpdateProductUseCase(productRepository, transaction),
+		//product.NewGetProductUseCase(productRepository),
+	)
+
+	r.HandleFunc("/api/orders", h.CreateOrder).Methods(http.MethodPost)
+	//r.HandleFunc("/api/orders/{id}", h.UpdateProduct).Methods(http.MethodPut)
+	//r.HandleFunc("/api/orders/{id}/process", h.GetProduct).Methods(http.MethodGet)
 }

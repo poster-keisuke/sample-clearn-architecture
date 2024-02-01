@@ -2,29 +2,21 @@ package order
 
 import (
 	"context"
-	"database/sql"
 	"github.com/poster-keisuke/sample-clearn-architecture/app/domain/order"
+	"github.com/poster-keisuke/sample-clearn-architecture/app/domain/product"
 )
 
-func revertProductStockTx(ctx context.Context, tx *sql.Tx, order *order.Order) error {
-	//for _, product := range order.Products {
-	//	product.Stock += product.OrderedAmount
-	//	if err := product.UpdateTx(ctx, tx); err != nil {
-	//		return err
-	//	}
-	//}
-	//order.Products
+func getRevertProductStock(ctx context.Context, order *order.Order) ([]*product.Product, error) {
+	var products []*product.Product
+	for _, p := range order.Products {
+		products = append(products, product.Reconstruct(p.ID, p.Name, p.Description, p.Category, p.Price, p.Stock))
+	}
 
 	//products := domain.NewProductsFromProductsWithOrderedAmount(order.Products)
 	//if err := products.RevertStockFromProductsWithOrderedAmount(order.Products); err != nil {
 	//	return xerrors.Errorf(": %w", err)
 	//}
 	//
-	//for _, product := range products {
-	//	if err := u.db.Product.UpdateTx(ctx, tx, product); err != nil {
-	//		return xerrors.Errorf(": %w", err)
-	//	}
-	//}
 
-	return nil
+	return products, nil
 }

@@ -43,7 +43,16 @@ func (uc *OrderProcessUseCase) Run(ctx context.Context, orderID string, orderPro
 		}
 
 		if updatedStatus.NeedsToRevertProductStock() {
-			// TODO: revert product stock
+			products, err := getRevertProductStock(ctx, order)
+			if err != nil {
+				xerrors.Errorf(": %w", err)
+			}
+
+			for _, product := range products {
+				if err := uc.productRepo.Update(ctx, product); err != nil {
+					return xerrors.Errorf(": %w", err)
+				}
+			}
 		}
 
 		return nil

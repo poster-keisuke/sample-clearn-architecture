@@ -9,18 +9,18 @@ import (
 	"net/http"
 )
 
-type handler struct {
+type productHandler struct {
 	createProductUseCase *product.CreateProductUseCase
 	updateProductUseCase *product.UpdateProductUseCase
 	getProductUseCase    *product.GetProductUseCase
 }
 
-func NewHandler(
+func NewProductHandler(
 	createProductUseCase *product.CreateProductUseCase,
 	updateProductUseCase *product.UpdateProductUseCase,
 	getProductUseCase *product.GetProductUseCase,
-) handler {
-	return handler{
+) productHandler {
+	return productHandler{
 		createProductUseCase: createProductUseCase,
 		updateProductUseCase: updateProductUseCase,
 		getProductUseCase:    getProductUseCase,
@@ -35,7 +35,7 @@ type ProductParams struct {
 	Stock       int    `json:"stock"`
 }
 
-func (h handler) CreateProduct(w http.ResponseWriter, r *http.Request) {
+func (h productHandler) CreateProduct(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
@@ -80,11 +80,11 @@ func (h handler) CreateProduct(w http.ResponseWriter, r *http.Request) {
 	_, _ = w.Write(response)
 }
 
-func (h handler) UpdateProduct(w http.ResponseWriter, _ *http.Request) {
+func (h productHandler) UpdateProduct(w http.ResponseWriter, _ *http.Request) {
 
 }
 
-func (h handler) GetProduct(w http.ResponseWriter, r *http.Request) {
+func (h productHandler) GetProduct(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	vars := mux.Vars(r)
 	id, ok := vars["id"]

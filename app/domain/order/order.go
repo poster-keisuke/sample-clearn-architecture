@@ -66,10 +66,10 @@ func (orderProcessType OrderProcessType) UpdatedStatus() (OrderStatus, error) {
 }
 
 type Order struct {
-	ID         string                       `json:"id"`
-	Status     OrderStatus                  `json:"status"`
-	TotalPrice int                          `json:"total_price,omitempty"`
-	Products   []*product.WithOrderedAmount `json:"products"`
+	ID         string                    `json:"id"`
+	Status     OrderStatus               `json:"status"`
+	TotalPrice int                       `json:"total_price,omitempty"`
+	Products   []*product.OrderedProduct `json:"products"`
 }
 
 func (o *Order) UpdateStatus(status OrderStatus) {
