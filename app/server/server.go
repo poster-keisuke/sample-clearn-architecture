@@ -65,7 +65,7 @@ func orderRouter(r *mux.Router) {
 
 	//transaction := repository.NewTransaction()
 	h := controller.NewOrderHandler(
-		order.NewCreteOrderUseCase(orderRepository, productRepository),
+		order.NewCreteOrderUseCase(orderRepository, productRepository, transaction),
 		order.NewCancelOrderUseCase(orderRepository, productRepository, transaction),
 		order.NewProcessOrderUseCase(orderRepository, productRepository, transaction),
 	)

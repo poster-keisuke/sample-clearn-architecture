@@ -76,6 +76,14 @@ func (o *Order) UpdateStatus(status OrderStatus) {
 	o.Status = status
 }
 
+func (o *Order) UpdateProducts(products []*product.OrderedProduct) {
+	o.Products = products
+}
+
+func (o *Order) UpdateTotalPrice(totalPrice int) {
+	o.TotalPrice = totalPrice
+}
+
 func NewOrder() *Order {
 	return &Order{
 		ID:     uuid.NewString(),

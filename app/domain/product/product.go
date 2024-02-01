@@ -60,6 +60,14 @@ func (p *Product) RevertStockFromAmount(amount int) {
 	p.Stock += amount
 }
 
+func (p *Product) DecreaseStockFromAmount(amount int) error {
+	p.Stock -= amount
+	if p.Stock < 0 {
+		return fmt.Errorf("the product's stock is not enough: id: %s, stock: %d", p.ID, p.Stock)
+	}
+	return nil
+}
+
 func (ps Products) MapByID() map[string]*Product {
 	m := make(map[string]*Product, len(ps))
 	for _, p := range ps {
@@ -68,14 +76,32 @@ func (ps Products) MapByID() map[string]*Product {
 	return m
 }
 
-func (ps Products) RevertStockFromProductsWithOrderedAmount(orderedAmounts []*OrderedProduct) error {
+func (ps Products) RevertStockFromProductsWithOrderedAmount(orderedProducts []*OrderedProduct) error {
 	m := ps.MapByID()
-	for _, orderedAmount := range orderedAmounts {
-		p, ok := m[orderedAmount.ID]
+	for _, orderedProduct := range orderedProducts {
+		p, ok := m[orderedProduct.ID]
 		if !ok {
-			return fmt.Errorf("product_id is not found: %s", orderedAmount.ID)
+			return fmt.Errorf("product_id is not found: %s", orderedProduct.ID)
 		}
-		p.RevertStockFromAmount(orderedAmount.Amount)
+		p.RevertStockFromAmount(orderedProduct.Amount)
 	}
 	return nil
+}
+
+func (ps Products) DecreaseStockFromOrderedProduct(orderedProducts []*OrderedProduct) error {
+	m := ps.MapByID()
+	for _, orderedProduct := range orderedProducts {
+		p, ok := m[orderedProduct.ID]
+		if !ok {
+			return fmt.Errorf("product_id is not found: %s", orderedProduct.ID)
+		}
+		if err := p.DecreaseStockFromAmount(orderedProduct.Amount); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (orderedProduct *OrderedProduct) CalculatePrice(price int) int {
+	return orderedProduct.Amount * price
 }
